@@ -1,5 +1,7 @@
 package com.samu.dev.arcflow.model;
 
+import com.samu.dev.arcflow.model.types.ProjectType;
+import com.samu.dev.arcflow.model.types.Status;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -33,8 +35,8 @@ public class Project {
     private Client client;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "responsible_id", nullable = false)
-    private User responsible;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(unique = true)
     private String name;
@@ -71,7 +73,7 @@ public class Project {
         this.id = id;
         this.office = office;
         this.client = client;
-        this.responsible = responsible;
+        this.user = responsible;
         this.name = name;
         this.type = type;
         this.status = status;
@@ -108,11 +110,11 @@ public class Project {
     }
 
     public User getResponsible() {
-        return responsible;
+        return user;
     }
 
     public void setResponsible(User responsible) {
-        this.responsible = responsible;
+        this.user = responsible;
     }
 
     public String getName() {
@@ -191,12 +193,12 @@ public class Project {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Project project = (Project) o;
-        return Objects.equals(id, project.id) && Objects.equals(office, project.office) && Objects.equals(client, project.client) && Objects.equals(responsible, project.responsible) && Objects.equals(name, project.name) && type == project.type && status == project.status && Objects.equals(totalAreaM2, project.totalAreaM2) && Objects.equals(contractValue, project.contractValue) && Objects.equals(startDate, project.startDate) && Objects.equals(deadline, project.deadline) && Objects.equals(phaseList, project.phaseList) && Objects.equals(modifications, project.modifications);
+        return Objects.equals(id, project.id) && Objects.equals(office, project.office) && Objects.equals(client, project.client) && Objects.equals(user, project.user) && Objects.equals(name, project.name) && type == project.type && status == project.status && Objects.equals(totalAreaM2, project.totalAreaM2) && Objects.equals(contractValue, project.contractValue) && Objects.equals(startDate, project.startDate) && Objects.equals(deadline, project.deadline) && Objects.equals(phaseList, project.phaseList) && Objects.equals(modifications, project.modifications);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, office, client, responsible, name, type, status, totalAreaM2, contractValue, startDate, deadline, phaseList, modifications);
+        return Objects.hash(id, office, client, user, name, type, status, totalAreaM2, contractValue, startDate, deadline, phaseList, modifications);
     }
 
     @Override
@@ -205,7 +207,7 @@ public class Project {
                 "id=" + id +
                 ", office=" + office +
                 ", client=" + client +
-                ", responsible=" + responsible +
+                ", responsible=" + user +
                 ", name='" + name + '\'' +
                 ", type=" + type +
                 ", status=" + status +

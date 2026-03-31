@@ -1,5 +1,6 @@
 package com.samu.dev.arcflow.model;
 
+import com.samu.dev.arcflow.model.types.StatusApproval;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

@@ -1,5 +1,6 @@
 package com.samu.dev.arcflow.model;
 
+import com.samu.dev.arcflow.model.types.DocumentType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -40,8 +41,8 @@ public class Document {
     @Column(name = "documente_code")
     private String documentCode;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @Column(name = "current_revision")
+    @OneToOne
+    @JoinColumn( name = "current_revision")
     private DocumentRevision currentRevision;
 
     @Column(name = "file_url")

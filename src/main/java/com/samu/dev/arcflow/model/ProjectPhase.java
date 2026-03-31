@@ -1,5 +1,7 @@
 package com.samu.dev.arcflow.model;
 
+import com.samu.dev.arcflow.model.types.PhaseStatus;
+import com.samu.dev.arcflow.model.types.PhaseType;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -14,7 +16,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;

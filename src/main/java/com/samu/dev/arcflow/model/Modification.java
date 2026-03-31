@@ -1,5 +1,7 @@
 package com.samu.dev.arcflow.model;
 
+import com.samu.dev.arcflow.model.types.OriginModification;
+import com.samu.dev.arcflow.model.types.StatusModification;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -27,6 +29,10 @@ public class Modification {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requested_id", nullable = false)
     private User requested;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "project_id")
+    private Project project;
 
     private String title;
 
