@@ -111,16 +111,5 @@ public class User {
         return Objects.hash(id, office, name, email, passwordHash, role, active);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", office=" + office +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", passwordHash='" + passwordHash + '\'' +
-                ", role=" + role +
-                ", active=" + active +
-                '}';
-    }
+
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
@@ -35,14 +36,14 @@ public class ProjectPhase {
     private Integer order;
 
     private BigDecimal completionPct = BigDecimal.ZERO;
-    private LocalDate startDate;
-    private LocalDate deadline;
+    private LocalDateTime startDate;
+    private LocalDateTime deadline;
 
 
     public ProjectPhase() {
     }
 
-    public ProjectPhase(String id, Project project, PhaseType type, PhaseStatus status, Integer order, BigDecimal completionPct, LocalDate startDate, LocalDate deadline) {
+    public ProjectPhase(String id, Project project, PhaseType type, PhaseStatus status, Integer order, BigDecimal completionPct, LocalDateTime startDate, LocalDateTime deadline) {
         this.id = id;
         this.project = project;
         this.type = type;
@@ -101,19 +102,19 @@ public class ProjectPhase {
         this.completionPct = completionPct;
     }
 
-    public LocalDate getStartDate() {
+    public LocalDateTime getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(LocalDate startDate) {
+    public void setStartDate(LocalDateTime startDate) {
         this.startDate = startDate;
     }
 
-    public LocalDate getDeadline() {
+    public LocalDateTime getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(LocalDateTime deadline) {
         this.deadline = deadline;
     }
 
