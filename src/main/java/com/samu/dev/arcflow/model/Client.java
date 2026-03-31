@@ -1,5 +1,6 @@
 package com.samu.dev.arcflow.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,7 +11,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -18,24 +21,37 @@ public class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "office_id", nullable = false)
     private Office office;
+
     @Column(unique = true)
     private String name;
+
     @Column(unique = true)
     private String email;
+
     @Column(unique = true)
     private String phone;
+
     @Column(name = "cpf_cnpj", unique = true)
     private String cpfCnpj;
+
     @Column(unique = true)
     private String address;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Project> projects;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ClientApproval> clientApprovals;
+
 
     public Client() {
     }
 
-    public Client(Long id, Office office, String name, String email, String phone, String cpfCnpj, String address) {
+    public Client(Long id, Office office, String name, String email, String phone, String cpfCnpj, String address, List<Project> projects, List<ClientApproval> clientApprovals) {
         this.id = id;
         this.office = office;
         this.name = name;
@@ -43,6 +59,8 @@ public class Client {
         this.phone = phone;
         this.cpfCnpj = cpfCnpj;
         this.address = address;
+        this.projects = projects;
+        this.clientApprovals = clientApprovals;
     }
 
     public Long getId() {
@@ -101,17 +119,32 @@ public class Client {
         this.address = address;
     }
 
+    public List<Project> getProjects() {
+        return projects;
+    }
+
+    public void setProjects(List<Project> projects) {
+        this.projects = projects;
+    }
+
+    public List<ClientApproval> getClientApprovals() {
+        return clientApprovals;
+    }
+
+    public void setClientApprovals(List<ClientApproval> clientApprovals) {
+        this.clientApprovals = clientApprovals;
+    }
+
     @Override
     public boolean equals(Object o) {
-
         if (o == null || getClass() != o.getClass()) return false;
         Client client = (Client) o;
-        return Objects.equals(id, client.id) && Objects.equals(office, client.office) && Objects.equals(name, client.name) && Objects.equals(email, client.email) && Objects.equals(phone, client.phone) && Objects.equals(cpfCnpj, client.cpfCnpj) && Objects.equals(address, client.address);
+        return Objects.equals(id, client.id) && Objects.equals(office, client.office) && Objects.equals(name, client.name) && Objects.equals(email, client.email) && Objects.equals(phone, client.phone) && Objects.equals(cpfCnpj, client.cpfCnpj) && Objects.equals(address, client.address) && Objects.equals(projects, client.projects) && Objects.equals(clientApprovals, client.clientApprovals);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, office, name, email, phone, cpfCnpj, address);
+        return Objects.hash(id, office, name, email, phone, cpfCnpj, address, projects, clientApprovals);
     }
 
     @Override
@@ -122,8 +155,10 @@ public class Client {
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
-                ", cpf/Cnpj='" + cpfCnpj + '\'' +
+                ", cpfCnpj='" + cpfCnpj + '\'' +
                 ", address='" + address + '\'' +
+                ", projects=" + projects +
+                ", clientApprovals=" + clientApprovals +
                 '}';
     }
 }

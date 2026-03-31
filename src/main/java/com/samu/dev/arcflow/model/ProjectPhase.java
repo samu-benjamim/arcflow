@@ -1,5 +1,6 @@
 package com.samu.dev.arcflow.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,10 +11,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -36,14 +39,24 @@ public class ProjectPhase {
     private Integer order;
 
     private BigDecimal completionPct = BigDecimal.ZERO;
+
     private LocalDateTime startDate;
+
     private LocalDateTime deadline;
 
+    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
+    private List<Task> tasks;
+
+    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
+    private List<Document> documents;
+
+    @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
+    private List<ClientApproval> clientApprovals;
 
     public ProjectPhase() {
     }
 
-    public ProjectPhase(String id, Project project, PhaseType type, PhaseStatus status, Integer order, BigDecimal completionPct, LocalDateTime startDate, LocalDateTime deadline) {
+    public ProjectPhase(String id, Project project, PhaseType type, PhaseStatus status, Integer order, BigDecimal completionPct, LocalDateTime startDate, LocalDateTime deadline, List<Task> tasks, List<Document> documents, List<ClientApproval> clientApprovals) {
         this.id = id;
         this.project = project;
         this.type = type;
@@ -52,6 +65,9 @@ public class ProjectPhase {
         this.completionPct = completionPct;
         this.startDate = startDate;
         this.deadline = deadline;
+        this.tasks = tasks;
+        this.documents = documents;
+        this.clientApprovals = clientApprovals;
     }
 
     public String getId() {
@@ -118,16 +134,40 @@ public class ProjectPhase {
         this.deadline = deadline;
     }
 
+    public List<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(List<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+    public List<Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
+
+    public List<ClientApproval> getClientApprovals() {
+        return clientApprovals;
+    }
+
+    public void setClientApprovals(List<ClientApproval> clientApprovals) {
+        this.clientApprovals = clientApprovals;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         ProjectPhase that = (ProjectPhase) o;
-        return Objects.equals(id, that.id) && Objects.equals(project, that.project) && type == that.type && status == that.status && Objects.equals(order, that.order) && Objects.equals(completionPct, that.completionPct) && Objects.equals(startDate, that.startDate) && Objects.equals(deadline, that.deadline);
+        return Objects.equals(id, that.id) && Objects.equals(project, that.project) && type == that.type && status == that.status && Objects.equals(order, that.order) && Objects.equals(completionPct, that.completionPct) && Objects.equals(startDate, that.startDate) && Objects.equals(deadline, that.deadline) && Objects.equals(tasks, that.tasks) && Objects.equals(documents, that.documents) && Objects.equals(clientApprovals, that.clientApprovals);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, project, type, status, order, completionPct, startDate, deadline);
+        return Objects.hash(id, project, type, status, order, completionPct, startDate, deadline, tasks, documents, clientApprovals);
     }
 
     @Override
@@ -141,6 +181,9 @@ public class ProjectPhase {
                 ", completionPct=" + completionPct +
                 ", startDate=" + startDate +
                 ", deadline=" + deadline +
+                ", tasks=" + tasks +
+                ", documents=" + documents +
+                ", clientApprovals=" + clientApprovals +
                 '}';
     }
 }
