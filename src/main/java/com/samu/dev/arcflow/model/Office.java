@@ -14,8 +14,10 @@ import java.util.Objects;
 public class Office {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Float id;
+    private Long id;
+    @Column(unique = true)
     private String name;
+    @Column(unique = true)
     private String email;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -24,18 +26,18 @@ public class Office {
     public Office() {
     }
 
-    public Office(Float id, String name, String email, OffsetDateTime createdAt) {
+    public Office(Long id, String name, String email, OffsetDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.createdAt = createdAt;
     }
 
-    public Float getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Float id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
