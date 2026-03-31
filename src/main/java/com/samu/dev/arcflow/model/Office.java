@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Objects;
 
@@ -21,7 +22,7 @@ public class Office {
     private String email;
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
-    private OffsetDateTime createdAt;
+    private LocalDate createdAt;
 
     public Office() {
     }
@@ -30,7 +31,7 @@ public class Office {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.createdAt = createdAt;
+        this.createdAt = createdAt.toLocalDate();
     }
 
     public Long getId() {
@@ -57,7 +58,7 @@ public class Office {
         this.email = email;
     }
 
-    public OffsetDateTime getCreatedAt() {
+    public LocalDate getCreatedAt() {
         return createdAt;
     }
 
