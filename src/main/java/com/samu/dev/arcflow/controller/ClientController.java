@@ -1,7 +1,7 @@
 package com.samu.dev.arcflow.controller;
 
-import com.samu.dev.arcflow.model.User;
-import com.samu.dev.arcflow.service.UserService;
+import com.samu.dev.arcflow.model.Client;
+import com.samu.dev.arcflow.service.ClientService;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -13,32 +13,33 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/user")
-public class UserController {
+@RequestMapping ("/office/{officeId}/client")
+public class ClientController {
 
-    private final UserService service;
+    private final ClientService service;
 
-    public UserController(UserService service) {
+    public ClientController(ClientService service) {
         this.service = service;
     }
 
+
     @PostMapping
-    public User create(@RequestBody User user, @PathVariable Long officeId){
-        return service.createUser(officeId, user);
+    public Client create(@RequestBody Client client,  @PathVariable Long officeId ){
+        return service.createClient(client, officeId);
     }
 
     @GetMapping
-    public User find(@RequestParam String name){
-        return service.findUserByName(name);
+    public Client find(@RequestParam String name){
+        return service.findClientByName(name);
     }
 
-    @PatchMapping ("/{id}")
-    public User update(@RequestBody User user, @PathVariable Long id){
-        return service.updateUser(user, id);
+    @PatchMapping("/{id}")
+    public Client update(@RequestBody Client client , @PathVariable Long id){
+        return service.updateClient(client , id);
     }
 
-    @DeleteMapping ("/{id}")
+    @DeleteMapping("/{id}")
     public void delete(@PathVariable Long id){
-        service.deleteUser(id);
+        service.deleteClient(id);
     }
 }

@@ -37,12 +37,12 @@ public class UserService {
 
     public User findUserByName(String nameUser){
         logger.info("Finding one User By Name.");
-        return repository.findByName(nameUser).orElseThrow(()-> new EntityNotFoundException("Office not found with name: " + nameUser));
+        return repository.findByName(nameUser).orElseThrow(()-> new EntityNotFoundException("User not found with name: " + nameUser));
     }
 
     public User findUserById(Long id){
         logger.info("Finding one User By Id.");
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("Office not found id."));
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("user not found id."));
     }
 
     public User updateUser(@NotNull User user, Long userId){
