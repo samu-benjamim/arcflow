@@ -2,7 +2,6 @@ package com.samu.dev.arcflow.service;
 
 import com.samu.dev.arcflow.model.Office;
 import com.samu.dev.arcflow.repository.OfficeRepository;
-import io.swagger.v3.oas.models.examples.Example;
 import jakarta.persistence.EntityNotFoundException;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -26,8 +25,13 @@ public class OfficeService {
     }
 
     public Office findOfficeByName(String nameOffice) {
-        logger.info("Finding one Office.");
+        logger.info("Finding one Office by name.");
         return repository.findByName(nameOffice).orElseThrow(()-> new EntityNotFoundException("Office not found with name: " + nameOffice));
+    }
+
+    public Office findOfficeById(Long id) {
+        logger.info("Finding one Office by id.");
+        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("Office not found id"));
     }
 
     public Office updateOffice(@NotNull Office office, Long id) {
