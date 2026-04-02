@@ -10,10 +10,19 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "document_revision")
 public class DocumentRevision {
     @Id
@@ -36,6 +45,7 @@ public class DocumentRevision {
     @Column(name = "change_description")
     private String changeDescription;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDate createdAt;
 }

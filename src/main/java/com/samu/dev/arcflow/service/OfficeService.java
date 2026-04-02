@@ -1,5 +1,9 @@
 package com.samu.dev.arcflow.service;
 
+import com.samu.dev.arcflow.dto.office.OfficeCreateRequest;
+import com.samu.dev.arcflow.dto.office.OfficeResponse;
+import com.samu.dev.arcflow.dto.office.OfficeUpdateRequest;
+import com.samu.dev.arcflow.mapper.ObjectMapper;
 import com.samu.dev.arcflow.model.Office;
 import com.samu.dev.arcflow.repository.OfficeRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,36 +19,44 @@ public class OfficeService {
 
     private final OfficeRepository repository;
 
-    public OfficeService(OfficeRepository repository) {
+    private final ObjectMapper mapper;
+
+    public OfficeService(OfficeRepository repository, ObjectMapper mapper) {
         this.repository = repository;
+        this.mapper = mapper;
     }
 
-    public Office createOffice(Office office) {
+    public OfficeResponse createOffice(OfficeCreateRequest officeDTO) {
         logger.info("Create one Office.");
-        return repository.save(office);
+        Office officeEntity = mapper.toEntityOffice(officeDTO);
+        return mapper.toResoponseOffice(repository.save(officeEntity));
     }
 
-    public Office findOfficeByName(String nameOffice) {
+    public OfficeResponse findOfficeByName(String nameOffice) {
         logger.info("Finding one Office by name.");
-        return repository.findByName(nameOffice).orElseThrow(()-> new EntityNotFoundException("Office not found with name: " + nameOffice));
+       return repository.findByName(nameOffice)
+                .map(mapper::toResoponseOffice)
+                .orElseThrow(()-> new EntityNotFoundException("Office not found with name: " + nameOffice));
     }
 
-    public Office findOfficeById(Long id) {
+    public OfficeResponse findOfficeById(Long id) {
         logger.info("Finding one Office by id.");
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("Office not found id"));
+        return repository.findById(id)
+                .map(mapper::toResoponseOffice)
+                .orElseThrow(()-> new EntityNotFoundException("Office not found id"));
     }
 
-    public Office updateOffice(@NotNull Office office, Long id) {
+    public OfficeResponse updateOffice(@NotNull OfficeUpdateRequest officeDTO, Long id) {
         logger.info("Update one Office.");
-        Office entityDB = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("No records found for this ID"));
-        entityDB.setName(office.getName());
-        entityDB.setEmail(office.getEmail());
-        return repository.save(entityDB);
+        Office entityDB = repository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Office not found id"));
+        mapper.updateEntityOffice(officeDTO, entityDB);
+        return mapper.toResoponseOffice(repository.save(entityDB));
     }
 
     public void deleteOffice(Long id) {
         logger.info("Deleting one Office.");
-        Office entityDB = repository.findById(id).orElseThrow(() -> new EntityNotFoundException("No records found for this ID"));;
-        repository.delete(entityDB);
+        repository.delete(repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }
 }

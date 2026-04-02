@@ -1,5 +1,8 @@
 package com.samu.dev.arcflow.controller;
 
+import com.samu.dev.arcflow.dto.client.ClientCreateRequest;
+import com.samu.dev.arcflow.dto.client.ClientResponse;
+import com.samu.dev.arcflow.dto.client.ClientUpdateRequest;
 import com.samu.dev.arcflow.model.Client;
 import com.samu.dev.arcflow.service.ClientService;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -22,19 +25,23 @@ public class ClientController {
         this.service = service;
     }
 
-
     @PostMapping
-    public Client create(@RequestBody Client client,  @PathVariable Long officeId ){
+    public ClientResponse create(@RequestBody ClientCreateRequest client, @PathVariable Long officeId ){
         return service.createClient(client, officeId);
     }
 
     @GetMapping
-    public Client find(@RequestParam String name){
+    public ClientResponse find(@RequestParam String name){
         return service.findClientByName(name);
     }
 
+    @GetMapping ("/{id}")
+    public ClientResponse find(@PathVariable Long id){
+        return service.findClientById(id);
+    }
+
     @PatchMapping("/{id}")
-    public Client update(@RequestBody Client client , @PathVariable Long id){
+    public ClientResponse update(@RequestBody ClientUpdateRequest client , @PathVariable Long id){
         return service.updateClient(client , id);
     }
 

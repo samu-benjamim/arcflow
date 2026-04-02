@@ -1,5 +1,13 @@
 package com.samu.dev.arcflow.service;
 
+import com.samu.dev.arcflow.dto.office.OfficeCreateRequest;
+import com.samu.dev.arcflow.dto.office.OfficeResponse;
+import com.samu.dev.arcflow.dto.office.OfficeUpdateRequest;
+import com.samu.dev.arcflow.dto.user.UserCreateRequest;
+import com.samu.dev.arcflow.dto.user.UserResponse;
+import com.samu.dev.arcflow.dto.user.UserUpdateRequest;
+import com.samu.dev.arcflow.mapper.ObjectMapper;
+import com.samu.dev.arcflow.model.Office;
 import com.samu.dev.arcflow.model.User;
 import com.samu.dev.arcflow.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -15,50 +23,50 @@ public class UserService {
 
     private final OfficeService officeService;
 
+    private final ObjectMapper mapper;
+
     private final Logger logger = LoggerFactory.getLogger(UserService.class.getName());
 
-    public UserService(UserRepository repository, OfficeService officeService) {
+    public UserService(UserRepository repository, OfficeService officeService, OfficeService officeService1, ObjectMapper mapper) {
         this.repository = repository;
-        this.officeService = officeService;
+        this.officeService = officeService1;
+        this.mapper = mapper;
     }
 
-    public User createUser(Long officeId, @NotNull User user){
+    public UserResponse createUser(UserCreateRequest userDTO, Long officeId) {
         logger.info("Create one User.");
-
-        User entity = new User();
-        entity.setOffice(officeService.findOfficeById(officeId));
-        entity.setName(user.getName());
-        entity.setEmail(user.getEmail());
-        entity.setPasswordHash(user.getPasswordHash());
-        entity.setRole(user.getRole());
-
-        return repository.save(entity);
+        User userEntity = mapper.toEntityUser(userDTO);
+        userEntity.setOffice(mapper.toResoponseConvertOffice(officeService.findOfficeById(officeId)));
+        return mapper.toResoponseUser(repository.save(userEntity));
     }
 
-    public User findUserByName(String nameUser){
-        logger.info("Finding one User By Name.");
-        return repository.findByName(nameUser).orElseThrow(()-> new EntityNotFoundException("User not found with name: " + nameUser));
+    public UserResponse findUserByName(String nameUser) {
+        logger.info("Finding one User by name.");
+        return repository.findByName(nameUser)
+                .map(mapper::toResoponseUser)
+                .orElseThrow(()-> new EntityNotFoundException("User not found with name: " + nameUser));
     }
 
-    public User findUserById(Long id){
-        logger.info("Finding one User By Id.");
-        return repository.findById(id).orElseThrow(()-> new EntityNotFoundException("user not found id."));
+    public UserResponse findUserById(Long id) {
+        logger.info("Finding one User by id.");
+        return repository.findById(id)
+                .map(mapper::toResoponseUser)
+                .orElseThrow(()-> new EntityNotFoundException("User not found id"));
     }
 
-    public User updateUser(@NotNull User user, Long userId){
+    public UserResponse updateUser(@NotNull UserUpdateRequest userDTO, Long id) {
         logger.info("Update one User.");
-        User entity = findUserById(userId);
-        entity.setName(user.getName());
-        entity.setEmail(user.getEmail());
-        entity.setPasswordHash(user.getPasswordHash());
-        entity.setRole(user.getRole());
-
-        return repository.save(entity);
+        User entityDB = repository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("User not found id"));
+        mapper.updateEntityUser(userDTO, entityDB);
+        return mapper.toResoponseUser(repository.save(entityDB));
     }
 
-    public void deleteUser(Long id){
-        logger.info("Deleting one User.");
-        repository.delete(repository.findById(id).orElseThrow(()-> new EntityNotFoundException("Office not found id.")));
+    public void deleteUser(Long id) {
+        logger.info("Deleting one Office.");
+        repository.delete(repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }
+
 
 }
