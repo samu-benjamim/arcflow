@@ -2,12 +2,12 @@ package com.samu.dev.arcflow.dto.projectphase;
 
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record ProjectPhaseUpdateRequest(
         String status,
         Integer order,
         BigDecimal completionPct,
-        LocalDateTime startDate,
-        LocalDateTime deadline
+        LocalDate startDate,
+        LocalDate deadline
 ) {}

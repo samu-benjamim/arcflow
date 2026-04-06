@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -31,8 +32,8 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ProjectPhase {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "project_id", nullable = false)
@@ -49,9 +50,9 @@ public class ProjectPhase {
 
     private BigDecimal completionPct = BigDecimal.ZERO;
 
-    private LocalDateTime startDate;
+    private LocalDate startDate;
 
-    private LocalDateTime deadline;
+    private LocalDate deadline;
 
     @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
     private List<Task> tasks;
