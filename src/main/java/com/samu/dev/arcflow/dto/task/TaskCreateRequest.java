@@ -7,6 +7,7 @@ public record TaskCreateRequest(
         String title,
         String description,
         Long phaseId,
+        Long userId,
         Integer order,
         BigDecimal estimatedHours,
         LocalDate deadline

@@ -33,7 +33,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class Task {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -41,7 +41,7 @@ public class Task {
     private ProjectPhase phase;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "responsible_id", nullable = false)
+    @JoinColumn(name = "responsible_id")
     private User user;
 
     @Column(nullable = false)

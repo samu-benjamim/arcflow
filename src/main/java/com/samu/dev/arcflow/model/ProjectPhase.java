@@ -32,7 +32,7 @@ import java.util.Objects;
 @AllArgsConstructor
 public class ProjectPhase {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
