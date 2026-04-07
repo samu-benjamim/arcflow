@@ -36,7 +36,7 @@ public class Document {
     private ProjectPhase phase;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "uploadedBy_id", nullable = false)
+    @JoinColumn(name = "uploadedBy_id")
     private User user;
 
     private String name;
