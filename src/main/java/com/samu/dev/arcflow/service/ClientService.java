@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ClientService {
@@ -29,6 +30,7 @@ public class ClientService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public ClientResponse createClient(ClientCreateRequest clientDTO, Long officeId) {
         logger.info("Create one Client.");
         Client clientEntity = mapper.toEntityClient(clientDTO);
@@ -37,29 +39,31 @@ public class ClientService {
     }
 
     public ClientResponse findClientByName(String nameClient) {
-        logger.info("Finding one Client by name.");
+        logger.info("Finding one Client by name: {}.", nameClient);
         return repository.findByName(nameClient)
                 .map(mapper::toResoponseClient)
                 .orElseThrow(()-> new EntityNotFoundException("Client not found with name: " + nameClient));
     }
 
     public ClientResponse findClientById(Long id) {
-        logger.info("Finding one Client by id.");
+        logger.info("Finding one Client by id: {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseClient)
                 .orElseThrow(()-> new EntityNotFoundException("Client not found id"));
     }
 
+    @Transactional
     public ClientResponse updateClient(@NotNull ClientUpdateRequest clientDTO, Long id) {
-        logger.info("Update one Client.");
+        logger.info("Update one Client: {}.", id);
         Client entityDB = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Client not found id"));
         mapper.updateEntityClient(clientDTO, entityDB);
         return mapper.toResoponseClient(repository.save(entityDB));
     }
 
+    @Transactional
     public void deleteClient(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Client: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

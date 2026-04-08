@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ProjectService {
@@ -32,6 +33,7 @@ public class ProjectService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public ProjectSummaryResponse createProject(ProjectCreateRequest projectDTO, Long officeId, Long clientId) {
         logger.info("Create one Project.");
         Project projectEntity = mapper.toEntityProject(projectDTO);
@@ -41,22 +43,24 @@ public class ProjectService {
     }
 
     public ProjectSummaryResponse findProjectById(Long id) {
-        logger.info("Finding one Project by id.");
+        logger.info("Finding one Project by id: {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseProject)
                 .orElseThrow(()-> new EntityNotFoundException("Project not found id"));
     }
 
+    @Transactional
     public ProjectSummaryResponse updateProject(@NotNull ProjectUpdateRequest projectDTO, Long id) {
-        logger.info("Update one Project.");
+        logger.info("Update one Project by id: {}.", id);
         Project entityDB = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Project not found id"));
         mapper.updateEntityProject(projectDTO, entityDB);
         return mapper.toResoponseProject(repository.save(entityDB));
     }
 
+    @Transactional
     public void deleteProject(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Project by id: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

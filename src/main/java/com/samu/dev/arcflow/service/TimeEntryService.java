@@ -11,6 +11,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TimeEntryService {
@@ -30,22 +31,24 @@ public class TimeEntryService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public TimeEntryResponse createTimeEntry(TimeEntryCreateRequest projectPhaseDTO, Long phaseId) {
-        logger.info("Create one Project.");
+        logger.info("Create one Time Entry.");
         TimeEntry taskEntity = mapper.toEntityTimeEntry(projectPhaseDTO);
         taskEntity.setTask(mapper.toResoponseConvertTask(taskService.findTaskById(phaseId)));
         return mapper.toResoponseTimeEntry(repository.save(taskEntity));
     }
 
     public TimeEntryResponse findTimeEntryById(Long id) {
-        logger.info("Finding one ProjectPhase by id.");
+        logger.info("Finding one Time Entry by id {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseTimeEntry)
                 .orElseThrow(()-> new EntityNotFoundException("TimeEntry not found id"));
     }
 
+    @Transactional
     public void deleteTimeEntry(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Time Entry by id: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

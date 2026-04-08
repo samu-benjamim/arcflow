@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -35,12 +35,13 @@ public class TimeEntry {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "hours_worked")
-    private LocalTime hoursWorked;
+    @Column(name = "hours_worked", precision = 5, scale = 2)
+    private BigDecimal hoursWorked;
 
     private LocalDateTime date;
 
     private String description;
+
 
 
 }

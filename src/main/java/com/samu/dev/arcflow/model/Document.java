@@ -45,7 +45,7 @@ public class Document {
     @Column(name = "document_type")
     private DocumentType documentType;
 
-    @Column(name = "documente_code")
+    @Column(name = "document_code")
     private String documentCode;
 
     @OneToOne
@@ -61,4 +61,13 @@ public class Document {
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private List<ClientApproval> clientApprovals;
 
+    public void addRevision(DocumentRevision revision) {
+        revision.setDocument(this);
+        this.documentRevisions.add(revision);
+    }
+
+    public void addApproval(ClientApproval approval) {
+        approval.setDocument(this);
+        this.clientApprovals.add(approval);
+    }
 }

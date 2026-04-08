@@ -24,7 +24,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -71,4 +70,8 @@ public class Task {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-}
+    public void addTimeEntry(TimeEntry timeEntry) {
+        timeEntry.setTask(this);
+        this.timeEntrys.add(timeEntry);
+    }
+ }

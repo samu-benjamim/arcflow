@@ -49,8 +49,8 @@ public class Modification {
     @Enumerated(EnumType.STRING)
     private OriginModification origin;
 
-    @Column(name = "impact_hours")
-    private LocalTime impactHours;
+    @Column(name = "impact_hours", precision = 5, scale = 2)
+    private BigDecimal impactHours;
 
     private BigDecimal extraCost;
 

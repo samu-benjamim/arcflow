@@ -8,7 +8,7 @@ public record ModificationCreateRequest(
         String title,
         String description,
         String origin,
-        LocalTime impactHours,
+        BigDecimal impactHours,
         BigDecimal extraCost
 ) {
 }

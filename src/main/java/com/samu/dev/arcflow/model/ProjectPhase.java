@@ -21,9 +21,7 @@ import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Getter
@@ -43,6 +41,7 @@ public class ProjectPhase {
     private PhaseType type;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private PhaseStatus status = PhaseStatus.PENDENTE;
 
     @Column(name = "phase_order")
@@ -62,5 +61,20 @@ public class ProjectPhase {
 
     @OneToMany(mappedBy = "phase", cascade = CascadeType.ALL)
     private List<ClientApproval> clientApprovals;
+
+    public void addTask(Task task) {
+        task.setPhase(this);
+        this.tasks.add(task);
+    }
+
+    public void addDocument(Document document) {
+        document.setPhase(this);
+        this.documents.add(document);
+    }
+
+    public void addApproval(ClientApproval approval) {
+        approval.setPhase(this);
+        this.clientApprovals.add(approval);
+    }
 
 }

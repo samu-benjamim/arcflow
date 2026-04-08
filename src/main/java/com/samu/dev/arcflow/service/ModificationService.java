@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ModificationService {
@@ -30,30 +31,33 @@ public class ModificationService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public ModificationResponse createModification(ModificationCreateRequest documentDTO, Long projectId) {
-        logger.info("Create one Modification Revision.");
+        logger.info("Create one Modification.");
         Modification taskEntity = mapper.toEntityModification(documentDTO);
         taskEntity.setProject(mapper.toResoponseConvertProject(projectService.findProjectById(projectId)));
         return mapper.toResoponseModification(repository.save(taskEntity));
     }
 
     public ModificationResponse findModificationById(Long id) {
-        logger.info("Finding one ProjectPhase by id.");
+        logger.info("Finding one Modification by id: {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseModification)
-                .orElseThrow(()-> new EntityNotFoundException("Modification Revision not found id"));
+                .orElseThrow(()-> new EntityNotFoundException("Modification not found id"));
     }
 
+    @Transactional
     public ModificationResponse updateModification(@NotNull ModificationUpdateRequest ModificationDTO, Long id) {
-        logger.info("Update one Office.");
+        logger.info("Update one Modification by id: {}.", id);
         Modification entityDB = repository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("client Approval not found id"));
+                .orElseThrow(()-> new EntityNotFoundException("Modification not found id"));
         mapper.updateEntityModification(ModificationDTO, entityDB);
         return mapper.toResoponseModification(repository.save(entityDB));
     }
 
+    @Transactional
     public void deleteModification(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Modification by id: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

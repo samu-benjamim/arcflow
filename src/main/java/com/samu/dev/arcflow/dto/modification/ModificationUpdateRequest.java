@@ -7,7 +7,7 @@ public record ModificationUpdateRequest(
         String title,
         String description,
         String status,
-        LocalTime impactHours,
+        BigDecimal impactHours,
         BigDecimal extraCost
 ) {
 }

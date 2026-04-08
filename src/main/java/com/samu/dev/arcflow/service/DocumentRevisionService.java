@@ -18,6 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class DocumentRevisionService {
@@ -37,7 +38,7 @@ public class DocumentRevisionService {
         this.mapper = mapper;
     }
 
-
+    @Transactional
     public DocumentRevisionResponse createDocumentRevision(DocumentRevisionCreateRequest documentDTO, Long documentId) {
         logger.info("Create one Document Revision.");
         DocumentRevision taskEntity = mapper.toEntityDocumentRevision(documentDTO);
@@ -46,18 +47,16 @@ public class DocumentRevisionService {
     }
 
     public DocumentRevisionResponse findDocumentRevisionById(Long id) {
-        logger.info("Finding one ProjectPhase by id.");
+        logger.info("Finding one Document Revision by id: {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseDocumentRevision)
                 .orElseThrow(()-> new EntityNotFoundException("Document Revision not found id"));
     }
 
+    @Transactional
     public void deleteDocumentRevision(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Document Revision by id: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }
-
-
-
 }

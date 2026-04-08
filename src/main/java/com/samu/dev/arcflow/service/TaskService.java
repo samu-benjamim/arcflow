@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TaskService {
@@ -36,6 +37,7 @@ public class TaskService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public TaskResponse createTask(TaskCreateRequest projectPhaseDTO, Long phaseId) {
         logger.info("Create one Project.");
         Task taskEntity = mapper.toEntityTask(projectPhaseDTO);
@@ -44,22 +46,24 @@ public class TaskService {
     }
 
     public TaskResponse findTaskById(Long id) {
-        logger.info("Finding one ProjectPhase by id.");
+        logger.info("Finding one Task by id.");
         return repository.findById(id)
                 .map(mapper::toResoponseTask)
                 .orElseThrow(()-> new EntityNotFoundException("Task not found id"));
     }
 
+    @Transactional
     public TaskResponse updateTask(@NotNull TaskUpdateRequest projectPhaseDTO, Long id) {
-        logger.info("Update one Task.");
+        logger.info("Update one Task by id: {}.", id);
         Task entityDB = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Task not found id"));
         mapper.updateEntityTask(projectPhaseDTO, entityDB);
         return mapper.toResoponseTask(repository.save(entityDB));
     }
 
+    @Transactional
     public void deleteTask(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Task by id: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

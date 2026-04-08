@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserService {
@@ -27,12 +28,14 @@ public class UserService {
 
     private final Logger logger = LoggerFactory.getLogger(UserService.class.getName());
 
-    public UserService(UserRepository repository, OfficeService officeService, OfficeService officeService1, ObjectMapper mapper) {
+    public UserService(UserRepository repository, OfficeService officeService, ObjectMapper mapper) {
         this.repository = repository;
-        this.officeService = officeService1;
+        this.officeService = officeService;
         this.mapper = mapper;
     }
 
+
+    @Transactional
     public UserResponse createUser(UserCreateRequest userDTO, Long officeId) {
         logger.info("Create one User.");
         User userEntity = mapper.toEntityUser(userDTO);
@@ -41,29 +44,31 @@ public class UserService {
     }
 
     public UserResponse findUserByName(String nameUser) {
-        logger.info("Finding one User by name.");
+        logger.info("Finding one User by name: {}.", nameUser);
         return repository.findByName(nameUser)
                 .map(mapper::toResoponseUser)
                 .orElseThrow(()-> new EntityNotFoundException("User not found with name: " + nameUser));
     }
 
     public UserResponse findUserById(Long id) {
-        logger.info("Finding one User by id.");
+        logger.info("Finding one User by id: {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseUser)
                 .orElseThrow(()-> new EntityNotFoundException("User not found id"));
     }
 
+    @Transactional
     public UserResponse updateUser(@NotNull UserUpdateRequest userDTO, Long id) {
-        logger.info("Update one User.");
+        logger.info("Update one User by id: {}.",id);
         User entityDB = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("User not found id"));
         mapper.updateEntityUser(userDTO, entityDB);
         return mapper.toResoponseUser(repository.save(entityDB));
     }
 
+    @Transactional
     public void deleteUser(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one  User by id: {}.",id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

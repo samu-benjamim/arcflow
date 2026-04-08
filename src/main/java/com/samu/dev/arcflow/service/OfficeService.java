@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OfficeService {
@@ -26,6 +27,7 @@ public class OfficeService {
         this.mapper = mapper;
     }
 
+    @Transactional
     public OfficeResponse createOffice(OfficeCreateRequest officeDTO) {
         logger.info("Create one Office.");
         Office officeEntity = mapper.toEntityOffice(officeDTO);
@@ -33,29 +35,31 @@ public class OfficeService {
     }
 
     public OfficeResponse findOfficeByName(String nameOffice) {
-        logger.info("Finding one Office by name.");
+        logger.info("Finding one Office by name: {}.", nameOffice);
        return repository.findByName(nameOffice)
                 .map(mapper::toResoponseOffice)
                 .orElseThrow(()-> new EntityNotFoundException("Office not found with name: " + nameOffice));
     }
 
     public OfficeResponse findOfficeById(Long id) {
-        logger.info("Finding one Office by id.");
+        logger.info("Finding one Office by id: {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseOffice)
                 .orElseThrow(()-> new EntityNotFoundException("Office not found id"));
     }
 
+    @Transactional
     public OfficeResponse updateOffice(@NotNull OfficeUpdateRequest officeDTO, Long id) {
-        logger.info("Update one Office.");
+        logger.info("Update one Office: {}.", id);
         Office entityDB = repository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Office not found id"));
         mapper.updateEntityOffice(officeDTO, entityDB);
         return mapper.toResoponseOffice(repository.save(entityDB));
     }
 
+    @Transactional
     public void deleteOffice(Long id) {
-        logger.info("Deleting one Office.");
+        logger.info("Deleting one Office: {}.", id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
     }

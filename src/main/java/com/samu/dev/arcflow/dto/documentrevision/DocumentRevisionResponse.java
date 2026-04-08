@@ -4,7 +4,7 @@ public record DocumentRevisionResponse(
         Long id,
         Long documentId,
         Long userId,
-        Character revisao,
+        String revisao,
         String fileUrl,
         String changeDescription
         ) {
