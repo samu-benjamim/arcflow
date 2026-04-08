@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project/{projectId}/phase/{phaseId}/document/{documentId}/revision")
+@RequestMapping("/documents/{documentId}/revisions")
 public class DocumentRevisionController {
 
     private final DocumentRevisionService service;

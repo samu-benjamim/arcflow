@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project/{projectId}/phase")
+@RequestMapping("/projects/{projectId}/phases")
 public class ProjectPhaseController {
 
     private final PhaseProjectService service;

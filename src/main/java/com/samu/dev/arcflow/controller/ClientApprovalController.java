@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project/{projectId}/phase/{phaseId}/document/{documentId}/clientapproval")
+@RequestMapping("/phases/{phaseId}/approvals")
 public class ClientApprovalController {
 
     private final ClientApprovalService service;

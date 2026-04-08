@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project/{projectId}/phase/{phaseId}/task")
+@RequestMapping("/phases/{phaseId}/tasks ")
 public class TaskController {
 
     private final TaskService service;

@@ -1,20 +1,12 @@
 package com.samu.dev.arcflow.service;
 
 
-import com.samu.dev.arcflow.dto.document.DocumentCreateRequest;
-import com.samu.dev.arcflow.dto.document.DocumentResponse;
-import com.samu.dev.arcflow.dto.document.DocumentUpdateRequest;
 import com.samu.dev.arcflow.dto.documentrevision.DocumentRevisionCreateRequest;
 import com.samu.dev.arcflow.dto.documentrevision.DocumentRevisionResponse;
 import com.samu.dev.arcflow.mapper.ObjectMapper;
-import com.samu.dev.arcflow.model.Document;
 import com.samu.dev.arcflow.model.DocumentRevision;
-import com.samu.dev.arcflow.repository.DocumentRepository;
 import com.samu.dev.arcflow.repository.DocumentRevisionRepository;
-import com.samu.dev.arcflow.repository.ProjectPhaseRepository;
-import com.samu.dev.arcflow.repository.ProjectRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

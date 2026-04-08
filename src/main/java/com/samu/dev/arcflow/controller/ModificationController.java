@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project/{projectId}/phase/{phaseId}/document/{documentId}/modification")
+@RequestMapping("/projects/{projectId}/modifications")
 public class ModificationController {
 
     private final ModificationService service;

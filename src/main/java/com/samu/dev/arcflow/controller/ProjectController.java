@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project")
+@RequestMapping("/offices/{officeId}/projects ")
 public class ProjectController {
 
     private final ProjectService service;
@@ -31,9 +31,8 @@ public class ProjectController {
     @PostMapping
     public ProjectSummaryResponse create(
             @RequestBody ProjectCreateRequest project,
-            @PathVariable Long officeId,
-            @PathVariable Long clientId){
-        return service.createProject(project, officeId, clientId);
+            @PathVariable Long officeId){
+        return service.createProject(project, officeId);
     }
 
     @GetMapping ("/{id}")

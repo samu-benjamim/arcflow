@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/office/{officeId}/client/{clientId}/project/{projectId}/phase/{phaseId}/document")
+@RequestMapping("/phases/{phaseId}/documents")
 public class DocumentController {
 
     private final DocumentService service;

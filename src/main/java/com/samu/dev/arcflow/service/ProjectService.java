@@ -22,23 +22,19 @@ public class ProjectService {
 
     private final OfficeService officeService;
 
-    private final ClientService clientService;
-
     private final ObjectMapper mapper;
 
-    public ProjectService(ProjectRepository projectRepository, ProjectRepository repository, OfficeService officeService, ClientService clientService, ObjectMapper mapper) {
+    public ProjectService(ProjectRepository repository, OfficeService officeService, ObjectMapper mapper) {
         this.repository = repository;
         this.officeService = officeService;
-        this.clientService = clientService;
         this.mapper = mapper;
     }
 
     @Transactional
-    public ProjectSummaryResponse createProject(ProjectCreateRequest projectDTO, Long officeId, Long clientId) {
+    public ProjectSummaryResponse createProject(ProjectCreateRequest projectDTO, Long officeId) {
         logger.info("Create one Project.");
         Project projectEntity = mapper.toEntityProject(projectDTO);
         projectEntity.setOffice(mapper.toResoponseConvertOffice(officeService.findOfficeById(officeId)));
-        projectEntity.setClient(mapper.toResoponseConvertClient(clientService.findClientById(clientId)));
         return mapper.toResoponseProject(repository.save(projectEntity));
     }
 
