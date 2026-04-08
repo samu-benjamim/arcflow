@@ -50,7 +50,7 @@ public class User {
     @Column(nullable = false)
     private Role role;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "manager")
     private List<Project> projects;
 
     @OneToMany(mappedBy = "user")
