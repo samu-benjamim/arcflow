@@ -25,15 +25,15 @@ public class DocumentRevisionService {
 
     private final Logger logger = LoggerFactory.getLogger(DocumentRevisionService.class.getName());
 
-    private final DocumentService documentervice;
+    private final DocumentService documentService;
 
     private final DocumentRevisionRepository repository;
 
 
     private final ObjectMapper mapper;
 
-    public DocumentRevisionService(DocumentService documentervice, DocumentRevisionRepository repository, ObjectMapper mapper) {
-        this.documentervice = documentervice;
+    public DocumentRevisionService(DocumentService documentService, DocumentRevisionRepository repository, ObjectMapper mapper) {
+        this.documentService = documentService;
         this.repository = repository;
         this.mapper = mapper;
     }
@@ -42,7 +42,7 @@ public class DocumentRevisionService {
     public DocumentRevisionResponse createDocumentRevision(DocumentRevisionCreateRequest documentDTO, Long documentId) {
         logger.info("Create one Document Revision.");
         DocumentRevision taskEntity = mapper.toEntityDocumentRevision(documentDTO);
-        taskEntity.setDocument(mapper.toResoponseConvertDocument(documentervice.findDocumentById(documentId)));
+        taskEntity.setDocument(mapper.toResoponseConvertDocument(documentService.findDocumentById(documentId)));
         return mapper.toResoponseDocumentRevision(repository.save(taskEntity));
     }
 
