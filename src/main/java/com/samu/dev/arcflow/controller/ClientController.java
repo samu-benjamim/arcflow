@@ -5,6 +5,9 @@ import com.samu.dev.arcflow.dto.client.ClientResponse;
 import com.samu.dev.arcflow.dto.client.ClientUpdateRequest;
 import com.samu.dev.arcflow.model.Client;
 import com.samu.dev.arcflow.service.ClientService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -26,27 +29,32 @@ public class ClientController {
     }
 
     @PostMapping
-    public ClientResponse create(@RequestBody ClientCreateRequest client, @PathVariable Long officeId ){
-        return service.createClient(client, officeId);
+    public ResponseEntity<ClientResponse> create(
+            @Valid @RequestBody ClientCreateRequest client,
+            @PathVariable Long officeId ){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createClient(client, officeId));
     }
 
     @GetMapping
-    public ClientResponse find(@RequestParam String name){
-        return service.findClientByName(name);
+    public ResponseEntity<ClientResponse> find(@RequestParam String name){
+        return ResponseEntity.ok(service.findClientByName(name));
     }
 
     @GetMapping ("/{id}")
-    public ClientResponse find(@PathVariable Long id){
-        return service.findClientById(id);
+    public ResponseEntity<ClientResponse> find(@PathVariable Long id){
+        return ResponseEntity.ok(service.findClientById(id));
     }
 
     @PatchMapping("/{id}")
-    public ClientResponse update(@RequestBody ClientUpdateRequest client , @PathVariable Long id){
-        return service.updateClient(client , id);
+    public ResponseEntity<ClientResponse> update(
+            @Valid @RequestBody ClientUpdateRequest client ,
+            @PathVariable Long id){
+        return ResponseEntity.ok(service.updateClient(client , id));
     }
 
     @DeleteMapping("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteClient(id);
+        return ResponseEntity.noContent().build();
     }
 }

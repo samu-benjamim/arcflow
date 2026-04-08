@@ -3,11 +3,10 @@ package com.samu.dev.arcflow.controller;
 import com.samu.dev.arcflow.dto.project.ProjectCreateRequest;
 import com.samu.dev.arcflow.dto.project.ProjectSummaryResponse;
 import com.samu.dev.arcflow.dto.project.ProjectUpdateRequest;
-import com.samu.dev.arcflow.dto.user.UserCreateRequest;
-import com.samu.dev.arcflow.dto.user.UserResponse;
-import com.samu.dev.arcflow.dto.user.UserUpdateRequest;
 import com.samu.dev.arcflow.service.ProjectService;
-import com.samu.dev.arcflow.service.UserService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,11 +14,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/offices/{officeId}/projects ")
+@RequestMapping("/offices/{officeId}/clients/{clientId}/projects")
 public class ProjectController {
 
     private final ProjectService service;
@@ -29,24 +27,27 @@ public class ProjectController {
     }
 
     @PostMapping
-    public ProjectSummaryResponse create(
-            @RequestBody ProjectCreateRequest project,
+    public ResponseEntity<ProjectSummaryResponse> create(
+            @Valid @RequestBody ProjectCreateRequest project,
             @PathVariable Long officeId){
-        return service.createProject(project, officeId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createProject(project, officeId));
     }
 
     @GetMapping ("/{id}")
-    public ProjectSummaryResponse findById( @PathVariable Long id){
-        return service.findProjectById(id);
+    public ResponseEntity<ProjectSummaryResponse> findById( @PathVariable Long id){
+        return ResponseEntity.ok(service.findProjectById(id));
     }
 
     @PatchMapping ("/{id}")
-    public ProjectSummaryResponse update(@RequestBody ProjectUpdateRequest project, @PathVariable Long id){
-        return service.updateProject(project, id);
+    public ResponseEntity<ProjectSummaryResponse> update(
+            @Valid @RequestBody ProjectUpdateRequest project,
+            @PathVariable Long id){
+        return ResponseEntity.ok(service.updateProject(project, id));
     }
 
     @DeleteMapping ("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteProject(id);
+        return ResponseEntity.noContent().build();
     }
 }

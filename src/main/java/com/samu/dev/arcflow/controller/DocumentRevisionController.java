@@ -4,6 +4,9 @@ package com.samu.dev.arcflow.controller;
 import com.samu.dev.arcflow.dto.documentrevision.DocumentRevisionCreateRequest;
 import com.samu.dev.arcflow.dto.documentrevision.DocumentRevisionResponse;
 import com.samu.dev.arcflow.service.DocumentRevisionService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,20 +26,21 @@ public class DocumentRevisionController {
     }
 
     @PostMapping
-    public DocumentRevisionResponse create(
-            @RequestBody DocumentRevisionCreateRequest task,
-            @PathVariable Long phaseId){
-        return service.createDocumentRevision(task, phaseId);
+    public ResponseEntity<DocumentRevisionResponse> create(
+            @Valid @RequestBody DocumentRevisionCreateRequest revision,
+            @PathVariable Long documentId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createDocumentRevision(revision, documentId));
     }
 
     @GetMapping ("/{id}")
-    public DocumentRevisionResponse findById( @PathVariable Long id){
-        return service.findDocumentRevisionById(id);
+    public ResponseEntity<DocumentRevisionResponse> findById( @PathVariable Long id){
+        return ResponseEntity.ok(service.findDocumentRevisionById(id));
     }
 
 
     @DeleteMapping ("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteDocumentRevision(id);
+        return ResponseEntity.noContent().build();
     }
 }

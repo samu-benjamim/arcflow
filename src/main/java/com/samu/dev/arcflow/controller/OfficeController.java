@@ -4,6 +4,9 @@ import com.samu.dev.arcflow.dto.office.OfficeCreateRequest;
 import com.samu.dev.arcflow.dto.office.OfficeResponse;
 import com.samu.dev.arcflow.dto.office.OfficeUpdateRequest;
 import com.samu.dev.arcflow.service.OfficeService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -25,27 +28,31 @@ public class OfficeController {
     }
 
     @PostMapping
-    public OfficeResponse create(@RequestBody OfficeCreateRequest office){
-        return service.createOffice(office);
+    public ResponseEntity<OfficeResponse> create(
+            @Valid @RequestBody OfficeCreateRequest office){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createOffice(office));
     }
 
     @GetMapping
-    public OfficeResponse find(@RequestParam String name){
-        return service.findOfficeByName(name);
+    public ResponseEntity<OfficeResponse> find(@RequestParam String name){
+        return ResponseEntity.ok(service.findOfficeByName(name));
     }
 
     @GetMapping ("/{id}")
-    public OfficeResponse findById(@PathVariable Long id){
-        return service.findOfficeById(id);
+    public ResponseEntity<OfficeResponse> findById(@PathVariable Long id){
+        return ResponseEntity.ok(service.findOfficeById(id));
     }
 
     @PatchMapping ("/{id}")
-    public OfficeResponse update(@RequestBody OfficeUpdateRequest office, @PathVariable Long id){
-        return service.updateOffice(office, id);
+    public ResponseEntity<OfficeResponse> update(
+            @Valid @RequestBody OfficeUpdateRequest office,
+            @PathVariable Long id){
+        return ResponseEntity.ok(service.updateOffice(office, id));
     }
 
     @DeleteMapping ("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteOffice(id);
+        return ResponseEntity.noContent().build();
     }
 }

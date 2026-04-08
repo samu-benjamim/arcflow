@@ -8,6 +8,9 @@ import com.samu.dev.arcflow.dto.task.TaskResponse;
 import com.samu.dev.arcflow.dto.task.TaskUpdateRequest;
 import com.samu.dev.arcflow.service.PhaseProjectService;
 import com.samu.dev.arcflow.service.TaskService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -28,24 +31,27 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskResponse create(
-            @RequestBody TaskCreateRequest task,
+    public ResponseEntity<TaskResponse> create(
+            @Valid @RequestBody TaskCreateRequest task,
             @PathVariable Long phaseId){
-        return service.createTask(task, phaseId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createTask(task, phaseId));
     }
 
     @GetMapping ("/{id}")
-    public TaskResponse findById( @PathVariable Long id){
-        return service.findTaskById(id);
+    public ResponseEntity<TaskResponse> findById( @PathVariable Long id){
+        return ResponseEntity.ok(service.findTaskById(id));
     }
 
     @PatchMapping ("/{id}")
-    public TaskResponse update(@RequestBody TaskUpdateRequest task, @PathVariable Long id){
-        return service.updateTask(task, id);
+    public ResponseEntity<TaskResponse> update(
+            @Valid @RequestBody TaskUpdateRequest task,
+            @PathVariable Long id){
+        return ResponseEntity.ok(service.updateTask(task, id));
     }
 
     @DeleteMapping ("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }

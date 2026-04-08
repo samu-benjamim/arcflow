@@ -5,6 +5,9 @@ import com.samu.dev.arcflow.dto.clientapproval.ClientApprovalCreateRequest;
 import com.samu.dev.arcflow.dto.clientapproval.ClientApprovalResponse;
 import com.samu.dev.arcflow.dto.clientapproval.ClientApprovalUpdateRequest;
 import com.samu.dev.arcflow.service.ClientApprovalService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/phases/{phaseId}/approvals")
+@RequestMapping("/documents/{documentId}/approvals")
 public class ClientApprovalController {
 
     private final ClientApprovalService service;
@@ -25,24 +28,27 @@ public class ClientApprovalController {
     }
 
     @PostMapping
-    public ClientApprovalResponse create(
-            @RequestBody ClientApprovalCreateRequest task,
-            @PathVariable Long phaseId){
-        return service.createClientApproval(task, phaseId);
+    public ResponseEntity<ClientApprovalResponse> create(
+            @Valid @RequestBody ClientApprovalCreateRequest clientApproval,
+            @PathVariable Long documentId){
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createClientApproval(clientApproval, documentId));
     }
 
     @GetMapping ("/{id}")
-    public ClientApprovalResponse findById( @PathVariable Long id){
-        return service.findClientApprovalById(id);
+    public ResponseEntity<ClientApprovalResponse> findById( @PathVariable Long id){
+        return ResponseEntity.ok(service.findClientApprovalById(id));
     }
 
     @PatchMapping ("/{id}")
-    public ClientApprovalResponse update(@RequestBody ClientApprovalUpdateRequest clientApproval, @PathVariable Long id){
-        return service.updateClientApproval(clientApproval, id);
+    public ResponseEntity<ClientApprovalResponse> update(
+            @Valid @RequestBody ClientApprovalUpdateRequest clientApproval,
+            @PathVariable Long id){
+        return ResponseEntity.ok(service.updateClientApproval(clientApproval, id));
     }
 
     @DeleteMapping ("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteClientApproval(id);
+        return ResponseEntity.noContent().build();
     }
 }

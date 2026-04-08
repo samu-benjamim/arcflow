@@ -4,6 +4,9 @@ import com.samu.dev.arcflow.dto.modification.ModificationCreateRequest;
 import com.samu.dev.arcflow.dto.modification.ModificationResponse;
 import com.samu.dev.arcflow.dto.modification.ModificationUpdateRequest;
 import com.samu.dev.arcflow.service.ModificationService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,24 +27,27 @@ public class ModificationController {
     }
 
     @PostMapping
-    public ModificationResponse create(
-            @RequestBody ModificationCreateRequest modification,
+    public ResponseEntity<ModificationResponse> create(
+            @Valid @RequestBody ModificationCreateRequest modification,
             @PathVariable Long phaseId){
-        return service.createModification(modification, phaseId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(service.createModification(modification, phaseId));
     }
 
     @GetMapping ("/{id}")
-    public ModificationResponse findById( @PathVariable Long id){
-        return service.findModificationById(id);
+    public ResponseEntity<ModificationResponse> findById( @PathVariable Long id){
+        return ResponseEntity.ok(service.findModificationById(id));
     }
 
     @PatchMapping ("/{id}")
-    public ModificationResponse update(@RequestBody ModificationUpdateRequest modification, @PathVariable Long id){
-        return service.updateModification(modification, id);
+    public ResponseEntity<ModificationResponse> update(
+            @Valid @RequestBody ModificationUpdateRequest modification,
+            @PathVariable Long id){
+        return ResponseEntity.ok(service.updateModification(modification, id));
     }
 
     @DeleteMapping ("/{id}")
-    public void delete(@PathVariable Long id){
+    public ResponseEntity<Void> delete(@PathVariable Long id){
         service.deleteModification(id);
+        return ResponseEntity.noContent().build();
     }
 }
