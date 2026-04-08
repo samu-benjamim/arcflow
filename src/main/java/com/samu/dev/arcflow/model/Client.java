@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,25 +33,34 @@ public class Client {
     @JoinColumn(name = "office_id", nullable = false)
     private Office office;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String name;
 
-    @Column(unique = true)
+    @Column(unique = true,nullable = false)
     private String email;
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String phone;
 
-    @Column(name = "cpf_cnpj", unique = true)
+    @Column(name = "cpf_cnpj", unique = true,nullable = false)
+    @Size(min = 11, max = 14)
     private String cpfCnpj;
 
-    @Column(unique = true)
+    @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client")
     private List<Project> projects;
 
-    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "client")
     private List<ClientApproval> clientApprovals;
 
+    public void addProject(Project project) {
+        project.setClient(this);
+        this.projects.add(project);
+    }
+    public void addApproval(ClientApproval approval) {
+        approval.setClient(this);
+        this.clientApprovals.add(approval);
+    }
 }
