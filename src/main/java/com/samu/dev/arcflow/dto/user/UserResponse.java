@@ -1,9 +1,11 @@
 package com.samu.dev.arcflow.dto.user;
 
+import com.samu.dev.arcflow.model.types.Role;
+
 public record UserResponse(
         Long id,
         String name,
         String email,
-        String role,
+        Role role,
         boolean active
 ) {}

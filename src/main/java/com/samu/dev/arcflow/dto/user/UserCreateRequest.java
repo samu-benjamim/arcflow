@@ -1,8 +1,10 @@
 package com.samu.dev.arcflow.dto.user;
 
+import com.samu.dev.arcflow.model.types.Role;
+
 public record UserCreateRequest(
         String name,
         String email,
-        String passwordHash,
-        String role
+        String password,
+        Role role
 ) {}

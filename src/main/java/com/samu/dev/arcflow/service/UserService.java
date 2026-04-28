@@ -1,19 +1,21 @@
 package com.samu.dev.arcflow.service;
 
-import com.samu.dev.arcflow.dto.office.OfficeCreateRequest;
-import com.samu.dev.arcflow.dto.office.OfficeResponse;
-import com.samu.dev.arcflow.dto.office.OfficeUpdateRequest;
+
 import com.samu.dev.arcflow.dto.user.UserCreateRequest;
 import com.samu.dev.arcflow.dto.user.UserResponse;
 import com.samu.dev.arcflow.dto.user.UserUpdateRequest;
+import com.samu.dev.arcflow.exception.BusinessException;
 import com.samu.dev.arcflow.mapper.ObjectMapper;
-import com.samu.dev.arcflow.model.Office;
 import com.samu.dev.arcflow.model.User;
+import com.samu.dev.arcflow.model.types.Role;
 import com.samu.dev.arcflow.repository.UserRepository;
+import com.samu.dev.arcflow.security.UserDetailsImpl;
 import jakarta.persistence.EntityNotFoundException;
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,12 +28,15 @@ public class UserService {
 
     private final ObjectMapper mapper;
 
+    private final PasswordEncoder passwordEncoder;
+
     private final Logger logger = LoggerFactory.getLogger(UserService.class.getName());
 
-    public UserService(UserRepository repository, OfficeService officeService, ObjectMapper mapper) {
+    public UserService(UserRepository repository, OfficeService officeService, ObjectMapper mapper, PasswordEncoder passwordEncoder) {
         this.repository = repository;
         this.officeService = officeService;
         this.mapper = mapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -71,7 +76,29 @@ public class UserService {
         logger.info("Deleting one  User by id: {}.",id);
         repository.delete(repository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
-    }
 
+    }
+    @PreAuthorize("hasRole('DIRETOR')")
+    @Transactional
+    public UserResponse addMember(UserCreateRequest dto,
+                                  UserDetailsImpl currentUser) {
+        if (repository.existsByEmail(dto.email())) {
+            throw new BusinessException("Email já cadastrado");
+        }
+
+        if (dto.role().equals(Role.DIRETOR)) {
+            throw new BusinessException("Não é permitido criar outro proprietário");
+        }
+
+        User member = new User();
+        member.setName(dto.name());
+        member.setEmail(dto.email());
+        member.setPasswordHash(passwordEncoder.encode(dto.password()));
+        member.setRole(dto.role());
+        member.setOffice(currentUser.getUser().getOffice());
+        member.setActive(true);
+
+        return mapper.toResoponseUser(repository.save(member));
+    }
 
 }
