@@ -43,25 +43,36 @@ import com.samu.dev.arcflow.model.Task;
 import com.samu.dev.arcflow.model.TimeEntry;
 import com.samu.dev.arcflow.model.User;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel =  "spring")
+@Mapper(componentModel = "spring")
 public interface ObjectMapper {
 
     //CREATE
-    Office toEntityOffice (OfficeCreateRequest office);
+    Office toEntityOffice(OfficeCreateRequest office);
 
-    User toEntityUser (UserCreateRequest user);
+    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "office", ignore = true)
+    @Mapping(target = "projects", ignore = true)
+    @Mapping(target = "tasks", ignore = true)
+    @Mapping(target = "timeEntries", ignore = true)
+    User toEntityUser(UserCreateRequest user);
 
-    Client toEntityClient (ClientCreateRequest client);
+    Client toEntityClient(ClientCreateRequest client);
 
-    Project toEntityProject (ProjectCreateRequest project);
+    Project toEntityProject(ProjectCreateRequest project);
 
-    ProjectPhase toEntityProjectPhase (ProjectPhaseCreateRequest projectPhase);
+    ProjectPhase toEntityProjectPhase(ProjectPhaseCreateRequest projectPhase);
 
-    Task toEntityTask (TaskCreateRequest task);
+    @Mapping(target = "phase", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    Task toEntityTask(TaskCreateRequest task);
 
-    TimeEntry toEntityTimeEntry (TimeEntryCreateRequest timeEntry);
+    @Mapping(target = "task", ignore = true)
+    @Mapping(target = "user", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    TimeEntry toEntityTimeEntry(TimeEntryCreateRequest timeEntry);
 
     Document toEntityDocument (DocumentCreateRequest timeEntry);
 
@@ -103,7 +114,11 @@ public interface ObjectMapper {
 
     TaskResponse toResoponseTask (Task task);
 
-    TimeEntryResponse toResoponseTimeEntry (TimeEntry timeEntry);
+    @Mapping(source = "task.id",    target = "taskId")
+    @Mapping(source = "task.title", target = "taskTitle")
+    @Mapping(source = "user.id",    target = "userId")
+    @Mapping(source = "user.name",  target = "userName")
+    TimeEntryResponse toResoponseTimeEntry(TimeEntry timeEntry);
 
     DocumentResponse toResoponseDocument (Document timeEntry);
 

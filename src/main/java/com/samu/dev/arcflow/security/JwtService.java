@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtService {
 
 
-    @Value("${jwt.secret}")
+    @Value("${proprietiesjwt.secret}")
     private String secret;
 
     @Value("${jwt.expiration}")

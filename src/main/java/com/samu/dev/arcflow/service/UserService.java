@@ -42,41 +42,46 @@ public class UserService {
 
     @Transactional
     public UserResponse createUser(UserCreateRequest userDTO, Long officeId) {
-        logger.info("Create one User.");
+        logger.info("Creating user in office {}.", officeId);
+        if (repository.existsByEmail(userDTO.email())) {
+            throw new BusinessException("Email já cadastrado");
+        }
         User userEntity = mapper.toEntityUser(userDTO);
+        userEntity.setPasswordHash(passwordEncoder.encode(userDTO.password()));
         userEntity.setOffice(mapper.toResoponseConvertOffice(officeService.findOfficeById(officeId)));
+        userEntity.setActive(true);
         return mapper.toResoponseUser(repository.save(userEntity));
     }
 
     public UserResponse findUserByName(String nameUser) {
-        logger.info("Finding one User by name: {}.", nameUser);
+        logger.info("Finding user by name: {}.", nameUser);
         return repository.findByName(nameUser)
                 .map(mapper::toResoponseUser)
-                .orElseThrow(()-> new EntityNotFoundException("User not found with name: " + nameUser));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado: " + nameUser));
     }
 
     public UserResponse findUserById(Long id) {
-        logger.info("Finding one User by id: {}.", id);
+        logger.info("Finding user by id {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseUser)
-                .orElseThrow(()-> new EntityNotFoundException("User not found id"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado: " + id));
     }
 
     @Transactional
     public UserResponse updateUser(@NotNull UserUpdateRequest userDTO, Long id) {
-        logger.info("Update one User by id: {}.",id);
+        logger.info("Updating user id {}.", id);
         User entityDB = repository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("User not found id"));
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado: " + id));
         mapper.updateEntityUser(userDTO, entityDB);
         return mapper.toResoponseUser(repository.save(entityDB));
     }
 
     @Transactional
     public void deleteUser(Long id) {
-        logger.info("Deleting one  User by id: {}.",id);
-        repository.delete(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
-
+        logger.info("Deleting user id {}.", id);
+        User user = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado: " + id));
+        repository.delete(user);
     }
     @PreAuthorize("hasRole('DIRETOR')")
     @Transactional

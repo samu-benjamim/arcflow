@@ -1,16 +1,10 @@
 package com.samu.dev.arcflow.service;
 
-import com.samu.dev.arcflow.dto.projectphase.ProjectPhaseCreateRequest;
-import com.samu.dev.arcflow.dto.projectphase.ProjectPhaseResponse;
-import com.samu.dev.arcflow.dto.projectphase.ProjectPhaseUpdateRequest;
 import com.samu.dev.arcflow.dto.task.TaskCreateRequest;
 import com.samu.dev.arcflow.dto.task.TaskResponse;
 import com.samu.dev.arcflow.dto.task.TaskUpdateRequest;
 import com.samu.dev.arcflow.mapper.ObjectMapper;
-import com.samu.dev.arcflow.model.ProjectPhase;
 import com.samu.dev.arcflow.model.Task;
-import com.samu.dev.arcflow.repository.ProjectPhaseRepository;
-import com.samu.dev.arcflow.repository.ProjectRepository;
 import com.samu.dev.arcflow.repository.TaskRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.jetbrains.annotations.NotNull;
@@ -25,49 +19,44 @@ public class TaskService {
     private final Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
 
     private final PhaseProjectService phaseProjectService;
-
     private final TaskRepository repository;
-
-
     private final ObjectMapper mapper;
 
-    public TaskService(ProjectRepository projectRepository, TaskRepository repository, OfficeService officeService, ClientService clientService, ProjectRepository projectRepository1, ProjectService projectService, PhaseProjectService phaseProjectService, ProjectPhaseRepository repository1, ObjectMapper mapper) {
-        this.phaseProjectService = phaseProjectService;
+    public TaskService(TaskRepository repository, PhaseProjectService phaseProjectService, ObjectMapper mapper) {
         this.repository = repository;
+        this.phaseProjectService = phaseProjectService;
         this.mapper = mapper;
     }
 
     @Transactional
-    public TaskResponse createTask(TaskCreateRequest projectPhaseDTO, Long phaseId) {
-        logger.info("Create one Project.");
-        Task taskEntity = mapper.toEntityTask(projectPhaseDTO);
+    public TaskResponse createTask(TaskCreateRequest dto, Long phaseId) {
+        logger.info("Creating task in phase {}.", phaseId);
+        Task taskEntity = mapper.toEntityTask(dto);
         taskEntity.setPhase(mapper.toResoponseConvertProjectPhase(phaseProjectService.findProjectPhaseById(phaseId)));
         return mapper.toResoponseTask(repository.save(taskEntity));
     }
 
     public TaskResponse findTaskById(Long id) {
-        logger.info("Finding one Task by id.");
+        logger.info("Finding task by id {}.", id);
         return repository.findById(id)
                 .map(mapper::toResoponseTask)
-                .orElseThrow(()-> new EntityNotFoundException("Task not found id"));
+                .orElseThrow(() -> new EntityNotFoundException("Task não encontrada: " + id));
     }
 
     @Transactional
-    public TaskResponse updateTask(@NotNull TaskUpdateRequest projectPhaseDTO, Long id) {
-        logger.info("Update one Task by id: {}.", id);
+    public TaskResponse updateTask(@NotNull TaskUpdateRequest dto, Long id) {
+        logger.info("Updating task id {}.", id);
         Task entityDB = repository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Task not found id"));
-        mapper.updateEntityTask(projectPhaseDTO, entityDB);
+                .orElseThrow(() -> new EntityNotFoundException("Task não encontrada: " + id));
+        mapper.updateEntityTask(dto, entityDB);
         return mapper.toResoponseTask(repository.save(entityDB));
     }
 
     @Transactional
     public void deleteTask(Long id) {
-        logger.info("Deleting one Task by id: {}.", id);
-        repository.delete(repository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("No records found for this ID")));
+        logger.info("Deleting task id {}.", id);
+        Task task = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Task não encontrada: " + id));
+        repository.delete(task);
     }
-
-
-
 }

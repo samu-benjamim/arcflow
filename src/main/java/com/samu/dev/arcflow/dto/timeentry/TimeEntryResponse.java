@@ -1,13 +1,15 @@
 package com.samu.dev.arcflow.dto.timeentry;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.LocalDate;
 
 public record TimeEntryResponse(
         Long id,
         Long taskId,
+        String taskTitle,
+        Long userId,
+        String userName,
         BigDecimal hoursWorked,
-        LocalDateTime date,
+        LocalDate date,
         String description
 ) {}
